@@ -1,4 +1,9 @@
 import wx
+import numpy as np
+import cv2
+from matplotlib import pyplot as plt
+import imgProc
+
 
 class frameClass(wx.Frame):
 
@@ -83,12 +88,15 @@ class frameClass(wx.Frame):
         path_bit = openFileDialog_bit.GetPath()
         print (path_bit)
 
-
         image_file_bit = path_bit
         bmp_bit = wx.Image(image_file_bit, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
 
 
 
+
+
 app=wx.App()
 frameClass(None,"Image Inpainter")
+processor=imgProc.imageProcessor()
+processor.denoiseImage()
 app.MainLoop()
