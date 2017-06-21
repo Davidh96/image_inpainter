@@ -98,5 +98,5 @@ class frameClass(wx.Frame):
 app=wx.App()
 frameClass(None,"Image Inpainter")
 processor=imgProc.imageProcessor()
-processor.denoiseImage()
+processor.textureImage()
 app.MainLoop()
