@@ -98,5 +98,11 @@ class frameClass(wx.Frame):
 app=wx.App()
 frameClass(None,"Image Inpainter")
 processor=imgProc.imageProcessor()
-processor.textureImage()
+
+img1=processor.structureImage()
+img2=processor.textureImage()
+
+completed = cv2.addWeighted(img1,0.95,img2,0.05,0)
+cv2.imshow('completed',completed)
+
 app.MainLoop()

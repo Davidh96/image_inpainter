@@ -1,42 +1,45 @@
 import numpy as np
 import cv2
 from matplotlib import pyplot as plt
+from random import randint
+from time import time
+from PIL import Image
 
 #contains functions for processing the image
 class imageProcessor():
 
     #removes any noise from the image, resulting in the structure image
     def structureImage(self):
-        img = cv2.imread('TestImages/test.jpg')
+        img = cv2.imread('TestImages/test.jpg',0)
 
-        dst = cv2.fastNlMeansDenoisingColored(img,None,10,10,7,21)
-
-        plt.subplot(121),plt.imshow(img)
-        plt.subplot(122),plt.imshow(dst)
-        plt.show()
-
-        # img = cv2.imread('messi_2.jpg')
-
+        dst = self.denoiseImage(img)
 
         mask = cv2.imread('TestImages/mask.bmp',0)
         dst = cv2.inpaint(dst,mask,3,cv2.INPAINT_NS)
-        cv2.imshow('dst',dst)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        cv2.imshow('original',img)
+        cv2.imshow('impainted',dst)
 
+        return dst
 
-        return dst;
+    def denoiseImage(self,img):
+        return cv2.fastNlMeansDenoising(img,None,10,10,7)
 
     def textureImage(self):
+        img = cv2.imread('TestImages/test.jpg',0)
 
-        denoised=self.structureImage()
-        #grey = cv2.cvtColor(denoised, cv2.COLOR_BGR2GRAY)
+        edged=self.edgeDetection(img)
+        edged = cv2.bitwise_not(edged)
 
-        # img = cv2.imread('TestImages/test.jpg',-1)
-        # RGB_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        # completed=RGB_img-grey
-        # test=completed+grey
-        # plt.subplot(121),plt.imshow(completed)
-        # plt.subplot(122),plt.imshow(denoised)
-        # plt.subplot(131),plt.imshow(test)
-        # plt.show()
+        cv2.imshow('edge',edged)
+
+        mask = cv2.imread('TestImages/mask.bmp',0)
+        mask = cv2.bitwise_not(mask)
+        texture=mask-edged
+        cv2.imshow('texture',texture)
+
+        return texture
+
+
+    def edgeDetection(self,img):
+        edges = cv2.Canny(img,200,300)
+        return edges
